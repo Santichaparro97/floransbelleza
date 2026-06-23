@@ -391,9 +391,30 @@
   .toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(20px);z-index:50;
     background:var(--plum);color:#fff;padding:12px 22px;border-radius:30px;font-size:.85rem;opacity:0;pointer-events:none;transition:.3s;box-shadow:var(--shadow)}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* ---------- SPLASH / PORTADA ---------- */
+  #splash{
+    position:fixed;top:0;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:540px;z-index:9999;cursor:pointer;
+    background:#0a0610 url("portada.png") center center/cover no-repeat;
+    transition:opacity .55s ease,visibility .55s ease;
+  }
+  #splash:active{filter:brightness(1.04)}
+  #splash.hide{opacity:0;visibility:hidden;pointer-events:none}
+  /* zona táctil sobre el botón "Reservá tu turno" con un latido sutil */
+  #splash .splash-tap{
+    position:absolute;left:50%;bottom:14.5%;transform:translateX(-50%);width:66%;height:5.5%;border-radius:40px;
+    box-shadow:0 0 0 0 rgba(255,90,170,.55);animation:splashPulse 1.7s ease-in-out infinite;pointer-events:none;
+  }
+  @keyframes splashPulse{
+    0%,100%{box-shadow:0 0 14px 2px rgba(255,90,170,.0)}
+    50%{box-shadow:0 0 26px 6px rgba(255,90,170,.55)}
+  }
 </style>
 </head>
 <body>
+<div id="splash" onclick="enterApp()" role="button" tabindex="0" aria-label="Reservá tu turno">
+  <span class="splash-tap"></span>
+</div>
 <div class="bg-blobs"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
 <div class="bg-grain"></div>
 
@@ -782,6 +803,18 @@ function resetAll(){
 let toastT;function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),2200);}
 
 renderCats();renderServices();renderPros();showStep(0);
+
+/* ---------- PORTADA / SPLASH ---------- */
+function enterApp(){
+  const s=$("splash"); if(!s)return;
+  s.classList.add("hide");
+  document.body.style.overflow="";
+  setTimeout(()=>s.remove(),650);
+}
+if($("splash")){
+  document.body.style.overflow="hidden";
+  $("splash").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" ")enterApp();});
+}
 
 /* ---------- FRANJA DE TRABAJOS (carrusel automático cada 1s) ---------- */
 (function(){
