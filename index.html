@@ -394,40 +394,15 @@
 
   /* ---------- SPLASH / PORTADA ---------- */
   #splash{
-    position:fixed;top:0;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:540px;z-index:9999;cursor:pointer;
+    position:fixed;top:0;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:540px;z-index:9999;
     background:#0a0610 url("portada.png") center center/cover no-repeat;
-    transition:opacity .55s ease,visibility .55s ease;
+    transition:transform .75s cubic-bezier(.7,0,.2,1);
   }
-  #splash:active{filter:brightness(1.04)}
-  #splash.hide{opacity:0;visibility:hidden;pointer-events:none}
-  /* logo semi-flotando sobre la portada (sobre el círculo del diseño) */
-  #splash .float-logo{
-    position:absolute;left:50%;top:12.5%;transform:translateX(-50%);
-    height:28%;aspect-ratio:1;border-radius:50%;z-index:2;pointer-events:none;
-    background:#fff url("floransbelleza-logo.png") center/86% no-repeat;
-    box-shadow:0 16px 34px rgba(0,0,0,.55),0 6px 14px rgba(0,0,0,.4);
-    animation:logoFloat 3.6s ease-in-out infinite;
-  }
-  @keyframes logoFloat{
-    0%,100%{transform:translateX(-50%) translateY(0);box-shadow:0 14px 26px rgba(0,0,0,.5)}
-    50%{transform:translateX(-50%) translateY(-14px);box-shadow:0 26px 40px rgba(0,0,0,.55)}
-  }
-  /* zona táctil sobre el botón "Reservá tu turno" con un latido sutil */
-  #splash .splash-tap{
-    position:absolute;left:50%;bottom:14.5%;transform:translateX(-50%);width:66%;height:5.5%;border-radius:40px;
-    box-shadow:0 0 0 0 rgba(255,90,170,.55);animation:splashPulse 1.7s ease-in-out infinite;pointer-events:none;
-  }
-  @keyframes splashPulse{
-    0%,100%{box-shadow:0 0 14px 2px rgba(255,90,170,.0)}
-    50%{box-shadow:0 0 26px 6px rgba(255,90,170,.55)}
-  }
+  #splash.up{transform:translateX(-50%) translateY(-105%)}
 </style>
 </head>
 <body>
-<div id="splash" onclick="enterApp()" role="button" tabindex="0" aria-label="Reservá tu turno">
-  <div class="float-logo"></div>
-  <span class="splash-tap"></span>
-</div>
+<div id="splash" aria-hidden="true"></div>
 <div class="bg-blobs"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
 <div class="bg-grain"></div>
 
@@ -817,17 +792,16 @@ let toastT;function toast(m){const t=$("toast");t.textContent=m;t.classList.add(
 
 renderCats();renderServices();renderPros();showStep(0);
 
-/* ---------- PORTADA / SPLASH ---------- */
-function enterApp(){
+/* ---------- PORTADA / INTRO (1.5s y se levanta) ---------- */
+(function(){
   const s=$("splash"); if(!s)return;
-  s.classList.add("hide");
-  document.body.style.overflow="";
-  setTimeout(()=>s.remove(),650);
-}
-if($("splash")){
   document.body.style.overflow="hidden";
-  $("splash").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" ")enterApp();});
-}
+  setTimeout(()=>{
+    s.classList.add("up");
+    document.body.style.overflow="";
+    setTimeout(()=>s.remove(),800);
+  },1500);
+})();
 
 /* ---------- FRANJA DE TRABAJOS (carrusel automático cada 1s) ---------- */
 (function(){
